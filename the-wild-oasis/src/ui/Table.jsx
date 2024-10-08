@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
 import { createContext, useContext } from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
@@ -21,7 +20,6 @@ const CommonRow = styled.div`
 
 const StyledHeader = styled(CommonRow)`
   padding: 1.6rem 2.4rem;
-
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-100);
   text-transform: uppercase;
@@ -48,7 +46,6 @@ const Footer = styled.footer`
   justify-content: center;
   padding: 1.2rem;
 
-  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
   &:not(:has(*)) {
     display: none;
   }
@@ -59,6 +56,7 @@ const Empty = styled.p`
   font-weight: 500;
   text-align: center;
   margin: 2.4rem;
+  background-color: #ece1f8;
 `;
 
 const TableContext = createContext();
@@ -79,6 +77,7 @@ function Header({ children }) {
     </StyledHeader>
   );
 }
+
 function Row({ children }) {
   const { columns } = useContext(TableContext);
   return (
@@ -93,6 +92,25 @@ function Body({ data, render }) {
 
   return <StyledBody>{data.map(render)}</StyledBody>;
 }
+
+// Prop types validation
+Table.propTypes = {
+  columns: PropTypes.string.isRequired, // Expecting columns to be a string
+  children: PropTypes.node.isRequired, // Expecting children to be renderable
+};
+
+Header.propTypes = {
+  children: PropTypes.node.isRequired, // Expecting children to be renderable
+};
+
+Row.propTypes = {
+  children: PropTypes.node.isRequired, // Expecting children to be renderable
+};
+
+Body.propTypes = {
+  data: PropTypes.array.isRequired, // Expecting data to be an array
+  render: PropTypes.func.isRequired, // Expecting render to be a function
+};
 
 Table.Header = Header;
 Table.Body = Body;
