@@ -47,7 +47,7 @@ export default function Filter({ filterField, options }) {
 
   function handleClick(value) {
     searhParams.set(filterField, value);
-
+    if (searhParams.get("page")) searhParams("page", 1);
     setSearchParams(searhParams);
   }
 
