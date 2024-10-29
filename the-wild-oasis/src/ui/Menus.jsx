@@ -89,6 +89,7 @@ function Toogle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    e.stopPropagation();
     openId === "" || openId !== id ? open(id) : close();
     const rect = e.target.closest("button").getBoundingClientRect();
     setPosition({
@@ -105,7 +106,7 @@ function Toogle({ id }) {
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
 
-  const ref = useOutSideClick(close);
+  const ref = useOutSideClick(close, false);
 
   if (openId !== id) return null;
   return createPortal(

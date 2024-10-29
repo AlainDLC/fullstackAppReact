@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import styled from "styled-components";
 
 const ChartBox = styled.div`
@@ -21,7 +23,7 @@ const ChartBox = styled.div`
 const startDataLight = [
   {
     duration: "1 night",
-    value: 0,
+    value: 1,
     color: "#ef4444",
   },
   {
@@ -31,12 +33,12 @@ const startDataLight = [
   },
   {
     duration: "3 nights",
-    value: 0,
+    value: 3,
     color: "#eab308",
   },
   {
     duration: "4-5 nights",
-    value: 0,
+    value: 5,
     color: "#84cc16",
   },
   {
@@ -64,17 +66,17 @@ const startDataLight = [
 const startDataDark = [
   {
     duration: "1 night",
-    value: 0,
+    value: 2,
     color: "#b91c1c",
   },
   {
     duration: "2 nights",
-    value: 0,
+    value: 3,
     color: "#c2410c",
   },
   {
     duration: "3 nights",
-    value: 0,
+    value: 7,
     color: "#a16207",
   },
   {
@@ -84,7 +86,7 @@ const startDataDark = [
   },
   {
     duration: "6-7 nights",
-    value: 0,
+    value: 2,
     color: "#15803d",
   },
   {
@@ -99,7 +101,7 @@ const startDataDark = [
   },
   {
     duration: "21+ nights",
-    value: 0,
+    value: 4,
     color: "#7e22ce",
   },
 ];
@@ -129,4 +131,59 @@ function prepareData(startData, stays) {
     .filter((obj) => obj.value > 0);
 
   return data;
+}
+
+import React from "react";
+import Heading from "../../ui/Heading";
+import {
+  PieChart,
+  ResponsiveContainer,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+} from "recharts";
+import { useDarkMode } from "../../context/DarModeContext";
+
+export default function DurationChart({ confirmedStays }) {
+  const { isDarkMode } = useDarkMode();
+  const startData = isDarkMode ? startDataDark : startDataLight;
+  const data = prepareData(startData, confirmedStays);
+
+  return (
+    <ChartBox>
+      <Heading as="h2">Stay duration summary</Heading>
+      <ResponsiveContainer width="100%" height={240}>
+        <PieChart>
+          <Pie
+            data={startDataLight}
+            nameKey="duration"
+            dataKey="value"
+            innerRadius={85}
+            outerRadius={110}
+            cx="40%"
+            cy="50%"
+            paddingAngle={3}
+          >
+            {data.map((entry) => (
+              <Cell
+                fill={entry.color}
+                stroke={entry.color}
+                key={entry.duration}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend
+            verticalAlign="middle"
+            align="right"
+            width="30%"
+            layout="vertical"
+            iconSize={15}
+            iconType="circle"
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </ChartBox>
+  );
 }
